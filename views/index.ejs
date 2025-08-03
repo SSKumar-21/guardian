@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guardian Angel</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/styles/landing.css" />
+  <link rel="stylesheet" href="/styles/menu.css">
+  <link rel="stylesheet" href="/styles/darkMode.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="icon" href="https://i.ibb.co/WvB9Ncj3/logo.jpg">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+
+<body>
+  <div class="main">
+
+    <!-- Include Header (unchanged structure inside partial) -->
+    <%- include('partials/header.ejs') %>
+
+
+    <div class="lower">
+
+      <!-- Home Page -->
+      <div class="lower page" id="page-home">
+        <div class="mid">
+          <h1>Emergency Help Needed?</h1>
+          <p>Press the button below and help will reach shortly</p>
+          <img src="media/center_call.png" alt="Emergency" />
+        </div>
+      </div>
+      <!-- Location Page -->
+      <div class="lower page" id="page-location" style="display: none">
+        <div class="mid">
+          <p id="status">Fetching current location...</p>
+          <div id="map" style="height: 400px;"></div>
+        </div>
+      </div>
+
+      <!-- Bot Page -->
+      <div class="lower page" id="page-bot" style="display: none">
+        <div class="webchat">
+          <iframe
+            style="height: 100%; width: 100%; border: none;"
+            src="https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/06/01/02/20250601023409-6MJU22GE.json"
+          ></iframe>
+        </div>
+      </div>
+
+      <!-- Menu Page -->
+      <div class="lower page" id="page-menu" style="display: none">
+        <div class="menu-header">Profile</div>
+
+        <div class="menu-item">
+          <i class="fas fa-user"></i><span>Account</span><i class="fas fa-chevron-right arrow"></i>
+        </div>
+
+        <div class="menu-section-title">General Settings</div>
+
+        <div class="menu-item">
+          <i class="fas fa-globe"></i><span>Language</span><i class="fas fa-chevron-right arrow"></i>
+        </div>
+        <div class="menu-item" id="showAboutBtn">
+          <i class="fas fa-question"></i><span>About</span><i class="fas fa-chevron-right arrow"></i>
+        </div>
+        <div class="menu-item" id="showTermBtn">
+          <i class="fas fa-exclamation-triangle"></i><span>Terms & Conditions</span><i class="fas fa-chevron-right arrow"></i>
+        </div>
+        <div class="menu-item">
+          <i class="fas fa-share-alt"></i><span>Share This App</span><i class="fas fa-chevron-right arrow"></i>
+        </div>
+        <div class="menu-item">
+          <i class="fas fa-moon"></i>
+          <span>Dark Mode</span>
+          <div class="toggle-container">
+            <div id="darkToggle" class="toggle"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Include Footer (unchanged structure inside partial) -->
+  <%- include('partials/footer.ejs') %>
+
+  <!-- Scripts -->
+  <script src="https://cdn.botpress.cloud/webchat/v2.4/inject.js"></script>
+  <script src="/script/bot.js"></script>
+  
+  <script src="/script/minimiseLoading.js"></script>
+  <script src="/script/deviceCheck.js"></script>
+
+  <script src="/script/map.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="/script/popup.js"></script>
+    
+
+</body>
+</html>
