@@ -20,20 +20,47 @@ document.getElementById("showAboutBtn").addEventListener("click", function () {
   
     // Add your content
     modal.innerHTML = `
-      <h2>From July 1, 2025</h2>
-      <p><strong>Only Aadhaar Verified users can book Tatkal Train Tickets</strong></p>
-      <p>
-        Starting July 1, 2025, only Aadhaar authenticated users will be allowed to book Tatkal Train Tickets on the IRCTC Website and Mobile Apps. Avoid last-minute inconvenience!
-      </p>
-      <ul>
-        <li>Log in to IRCTC website or IRCTC Rail Connect Mobile App.</li>
-        <li>Go to "My Account".</li>
-        <li>Click on “Authenticate User” and complete the process.</li>
-      </ul>
-      <p>1 जुलाई 2025 से केवल आधार प्रमाणित उपयोगकर्ताओं को ही आईआरसीटीसी वेबसाइट और मोबाइल ऐप पर तत्काल ट्रेन टिकट बुक करने की अनुमति होगी।</p>
-      <div style="text-align:center; margin-top:20px;">
-        <button id="okBtnPopup" style="padding: 8px 20px; background: linear-gradient(to bottom right, #a9271b, #000000);color: #FFFFFF; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">OK</button>
-      </div>
+    <h2>About Guardian Angel</h2>
+    <p>Welcome to the Emergency Helpline App – your 24x7 safety companion. This app is designed to provide instant support during emergencies, ensuring help is just a tap away.</p>
+    
+    <ol>
+      <li>
+        <strong>Emergency Call</strong>
+        <p>Connect directly to nearby police or official helpline numbers with one tap.</p>
+      </li>
+    
+      <li>
+        <strong>Live Chat Support</strong>
+        <p>Receive real-time assistance from our dedicated emergency response team.</p>
+      </li>
+    
+      <li>
+        <strong>Location Tracking</strong>
+        <p>Instantly share your real-time location with trusted authorities to get timely help.</p>
+      </li>
+    
+      <li>
+        <strong>Smart Chatbot Assistance</strong>
+        <p>Our intelligent chatbot is trained to support women in distress with accurate and empathetic guidance during emergencies.</p>
+      </li>
+    
+      <li>
+        <strong>Multi-Language Support</strong>
+        <p>Breaking language barriers – the app supports multiple languages so that everyone can access help effortlessly.</p>
+      </li>
+    
+      <li>
+        <strong>Our Mission</strong>
+        <p>We aim to create a secure and responsive environment for women and individuals in distress by combining technology with empathy and care.</p>
+      </li>
+    </ol>
+    
+    <div style="text-align:center; margin-top:20px; bottom:0; background:#1e1e11; padding-top:10px;">
+      <button id="okBtnPopup" style="padding: 8px 20px; background: linear-gradient(to bottom right, #a9271b, #000000); color: #FFFFFF; border: none; border-radius: 5px; font-weight: bold; cursor: pointer;">
+        OK
+      </button>
+    </div>
+    
     `;
   
     // Append to body
