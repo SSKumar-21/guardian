@@ -216,3 +216,8 @@ input[value="Location"] {
     border: 2px solid black;
     border-radius: 10px;
   }
+
+  a{
+    text-decoration: none;
+    color: inherit;
+  }
