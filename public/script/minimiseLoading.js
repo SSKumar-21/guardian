@@ -2,15 +2,40 @@
 function switchPage(page) {
   const pages = document.querySelectorAll('.page');
   pages.forEach(p => p.style.display = 'none');
+
   const selectedPage = document.getElementById(`page-${page}`);
   if (selectedPage) selectedPage.style.display = 'block';
 
-  if(page === "bot"){
-    document.querySelector(".upper").style.display = 'none';
+  if (page === "bot") {
+      document.querySelector(".upper").style.display = 'none';
   } else {
-    document.querySelector(".upper").style.display = 'block';
+      document.querySelector(".upper").style.display = 'block';
   }
 }
+
+// Event listener for menu items
+document.addEventListener("DOMContentLoaded", function () {
+  const accountBtn = document.getElementById("accountBtn");
+  if (accountBtn) {
+      accountBtn.addEventListener("click", function () {
+          switchPage("settings");
+      });
+  }
+
+  const trustedContactBtn = document.getElementById("trustedContactBtn");
+  if (trustedContactBtn) {
+      trustedContactBtn.addEventListener("click", function () {
+          switchPage("trustedcontact");
+      });
+  }
+
+  const personalInfoBtn = document.getElementById("personalInfoBtn");
+  if (personalInfoBtn) {
+      personalInfoBtn.addEventListener("click", function () {
+          switchPage("personalinfo");
+      });
+  }
+});
 
 // Add dark mode CSS dynamically
 function enableDarkModeCSS() {

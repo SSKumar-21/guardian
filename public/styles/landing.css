@@ -3,6 +3,7 @@
     margin: 0;
     border: none;
     box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .main {
@@ -221,3 +222,10 @@ input[value="Location"] {
     text-decoration: none;
     color: inherit;
   }
+
+  .menu-item.danger {
+    color: red;
+}
+.menu-item.danger i {
+    color: red;
+}

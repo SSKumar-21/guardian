@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="/styles/landing.css" />
   <link rel="stylesheet" href="/styles/menu.css">
   <link rel="stylesheet" href="/styles/darkMode.css">
+  <link rel="stylesheet" href="/styles/account.css">
+  <link rel="stylesheet" href="/styles/logout.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <link rel="icon" href="https://i.ibb.co/WvB9Ncj3/logo.jpg">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -53,7 +55,7 @@
       <div class="lower page" id="page-menu" style="display: none">
         <div class="menu-header">Profile</div>
 
-        <div class="menu-item">
+        <div class="menu-item" id="accountBtn">
           <i class="fas fa-user"></i><span>Account</span><i class="fas fa-chevron-right arrow"></i>
         </div>
 
@@ -84,13 +86,118 @@
         </div>
       </div>
 
-
-      <!-- ACCOUNT page-->
       
+      <!-- ACCOUNT Page -->
+<div class="lower page" id="page-settings" style="display: none">
+  <div class="menu-header">Account</div>
 
+  <div class="menu-section-title">Profile Settings</div>
+  <div class="menu-item" id="personalInfoBtn">
+      <i class="fas fa-id-card"></i>
+      <span>Personal Information</span>
+      <i class="fas fa-chevron-right arrow"></i>
+  </div>
 
+  <div class="menu-section-title">Contacts</div>
+  <div class="menu-item" id="trustedContactBtn">
+      <i class="fas fa-user-shield"></i>
+      <span>Trusted Contact</span>
+      <i class="fas fa-chevron-right arrow"></i>
+  </div>
 
+  <div class="menu-section-title">Account Actions</div>
+  <div class="menu-item" id="logoutBtn">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Logout</span>
+      <i class="fas fa-chevron-right arrow"></i>
+  </div>
+
+  <div class="menu-item danger" id="deleteBtn">
+      <i class="fas fa-trash-alt"></i>
+      <span>Delete</span>
+      <i class="fas fa-chevron-right arrow"></i>
+  </div>
+</div>
+
+<!-- TRUSTED CONTACT Page -->
+
+  <div class="lower page" id="page-trustedcontact" style="display:none">
+    <div class="menu-header">Trusted Contact</div>
+
+    <form id="trustedContactForm" method="post" action="/trusted-contacts/<%=userId%>">
+      <input type="text" name="name" placeholder="Name" required>
+      <select name="relation" required>
+        <option value="" disabled selected>Select Relation</option>
+        <option value="Parent">Parent</option>
+        <option value="Sibling">Sibling</option>
+        <option value="Friend">Friend</option>
+        <option value="Spouse">Spouse</option>
+        <option value="Colleague">Colleague</option>
+        <option value="Other">Other</option>
+      </select>    
+      <input type="tel" name="phone" placeholder="Phone Number" pattern="[0-9]{10}" required>
+      <button type="submit" id="addContactBtn">Add Contact</button>
+    </form>
+
+    <div class="menu-section-title">Saved Contacts</div>
+    <ul id="contactList">
+      <% if (contacts.length === 0) { %>
+        <li>No contacts found</li>
+      <% } else { %>
+        <% contacts.forEach(contact => { %>
+          <li>
+            <strong><%= contact.Name %></strong><br>
+            Relation: <%= contact.Relation %><br>
+            Phone: <%= contact.Pho %>
+          </li>
+
+        <% }) %>
+      <% } %>
+    </ul>
+    
+    
+  </div>
+
+  <!-- PERSONAL INFORMATION Page -->
+<div class="lower page" id="page-personalinfo" style="display:none">
+  <div class="menu-header">Personal Information</div>
+
+  <form id="personalInfoForm" method="post" action="/update-personal-info/<%= userId %>">
+    <div class="form-group">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" value="<%= user.Name %>" required>
     </div>
+
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" value="<%= user.username %>" required>
+    </div>
+
+
+    <div class="form-group">
+      <label for="email">Email (cannot be changed)</label>
+      <input type="email" id="email" name="email" value="<%= user.email %>" readonly>
+    </div>
+
+
+    <div class="form-group">
+      <label for="phone">Phone</label>
+      <input type="tel" id="phone" name="phone" value="<%= user.phone %>" pattern="[0-9]{10}" required>
+    </div>
+
+
+    <div class="form-group">
+      <label for="address">Address</label>
+      <textarea id="address" name="address" rows="2"><%= user.address %></textarea>
+    </div>
+
+    <button type="submit" id="savePersonalInfoBtn">Save Changes</button>
+  </form>
+</div>
+
+
+  </div>
   </div>
 
   <!-- Include Footer (unchanged structure inside partial) -->
@@ -106,6 +213,7 @@
   <script src="/script/map.js"></script>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="/script/popup.js"></script>
+  <script src="/script/logout.js"></script>
     
 
 </body>

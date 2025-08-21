@@ -1,4 +1,4 @@
-import express from "express";
+import express, { json } from "express";
 import axios from "axios";
 import admin from "firebase-admin";
 import path from "path";
@@ -107,33 +107,46 @@ app.post("/signUp", async (req, res) => {
 });
   
 app.get("/:IDuser", async (req, res) => {
-    const id = req.params.IDuser;
-    let User;
-  
-    try {
-      const response = await axios.get(`${url}/users.json`);
-      const users = response.data;
-  
-      for (const userId in users) {
-        if (userId === id) {
-          User = users[userId];
-          break;
-        }
+  const id = req.params.IDuser;
+  let User;
+
+  try {
+    //finding user
+    const response = await axios.get(`${url}/users.json`);
+    const users = response.data;
+
+    for (const userId in users) {
+      if (userId === id) {
+        User = users[userId];
+        break;
       }
-  
-      if (User) {
-        res.render("index.ejs", { username: User.name || User.username });
-      } else {
-        res.status(404).send("User not found");
-      }
-  
-    } catch (err) {
-      console.error("Error during user fetch:", err);
-      res.status(500).send("Internal Server Error");
     }
+
+    if (!User) {
+      return res.status(404).send("User not found");
+    }
+
+    // trusted contact
+    const contacts = Object.entries(User)
+      .filter(([key]) => key.toLowerCase().startsWith("contact"))
+      .map(([, contact]) => contact);
+
+
+    // Loading page
+    res.render("index.ejs", {
+      username: User.name || User.username,
+      userId: id,
+      contacts: contacts,
+      user: User
+    });
+  } catch (err) {
+    console.error("Error during user fetch:", err);
+    res.status(500).send("Internal Server Error");
+  }
 });
-  
+
 app.post("/forgotPassword", async (req, res) => {
+
   const email = req.body.email;
 
   try {
@@ -178,19 +191,23 @@ app.post("/forgotPassword", async (req, res) => {
     }
 
     const newPassword = generateRandomPassword();
-    const subject = "Your Password Has Been Reset Successfully";
-    const message = `Hello ${User.name || User.username},
+    const subject = 'Password Reset Confirmation';
+    const message = `Dear ${User.name || User.username},
 
-We have successfully reset your password as per your request.
-
-Your new password is: ${newPassword}
-
-For your security, please change this password after logging in.
-
-If you did not request this change, please contact our support team immediately.
-
-Best regards,
-Your Company Team
+    We have successfully reset your password as per your request.
+    
+    Your new login credentials are as follows:
+    
+    Username: ${User.name || User.username}
+    
+    New Password: ${newPassword}
+    
+    For your security, please log in immediately and change your password to something memorable yet secure. If you did not request this change, contact our support team right away.
+    
+    Best regards,
+    Guardian Angel Support Team
+    website Link: https://guardianangel.onrender.com
+    [Customer Care Number]
 `;
 
     const mailInfo = {
@@ -215,6 +232,69 @@ Your Company Team
   }
 });
 
+app.post("/trusted-contacts/:IDuser", async(req, res) => {
+  const id = req.params.IDuser;
+  const data = {
+    Name: req.body.name,
+    Relation: req.body.relation,
+    Pho: req.body.phone
+  }
+  try {
+    const response = await axios.get(`${url}/users.json`);
+    let User;
+    const users =  response.data;
+    for (const userId in users) {
+      if (userId === id) {
+        User = users[userId];
+        break;
+      }
+    }
+
+    const contactNo = `Contact${Object.keys(User).length - 2}`;
+
+    await axios.patch(`${url}/users/${id}.json`, {
+      [contactNo]: data,
+    })
+
+    res.send(`<script>alert("Contact Added Successfully");window.location.href = "/${id}";</script>`);  
+  } catch(err){
+    console.error("Error during forgot password process:", err);
+    return res.status(500).send("Internal Server Error");
+  }
+});
+
+app.post("/update-personal-info/:IDuser",async(req,res)=>{
+  try{const id = req.params.IDuser;
+
+    const response = await axios.get(`${url}/users.json`);
+    let User;
+    const users =  response.data;
+    for (const userId in users) {
+      if (userId === id) {
+        User = users[userId];
+        break;
+      }}
+
+
+  await axios.put(`${url}/users/${id}.json`,{
+    Name: req.body.name,
+    username: req.body.username,
+    email: req.body.email,
+    phone: req.body.phone,
+    address: req.body.address,
+    password: User.password
+  });
+
+  res.send(`<script>alert("Information Updated");window.location.href = "/${id}";</script>`);  
+  }catch(err){
+    console.error("Error during forgot password process:", err);
+    return res.status(500).send("Internal Server Error");
+  }
+})
+
+app.delete
+
 app.listen(port, () => {
     console.log(`Server running on port: ${port}...`);
 });
+
