@@ -276,13 +276,11 @@ app.post("/update-personal-info/:IDuser",async(req,res)=>{
       }}
 
 
-  await axios.put(`${url}/users/${id}.json`,{
-    Name: req.body.name,
+  await axios.patch(`${url}/users/${id}.json`,{
     username: req.body.username,
     email: req.body.email,
     phone: req.body.phone,
     address: req.body.address,
-    password: User.password
   });
 
   res.send(`<script>alert("Information Updated");window.location.href = "/${id}";</script>`);  
@@ -292,9 +290,51 @@ app.post("/update-personal-info/:IDuser",async(req,res)=>{
   }
 })
 
-app.delete
+app.get("/delete/:IDuser",(req,res)=>{
+  res.render("delete.ejs");
+})
+
+app.delete("/delete/:IDuser",async(req,res)=>{
+  console.log(req.body);
+
+
+//   const transporter = nodemailer.createTransport({
+//     service: "gmail",
+//     auth: {
+//       user: process.env.EMAIL_USER,
+//       pass: process.env.EMAIL_PASS,
+//     },
+//   });
+
+//   function generateRandomPassword(length = 12) {
+//     const chars =
+//       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=<>?";
+//     let password = "";
+//     for (let i = 0; i < length; i++) {
+//       const randomIndex = Math.floor(Math.random() * chars.length);
+//       password += chars[randomIndex];
+//     }
+//     return password;
+//   }
+
+
+//   const newPassword = generateRandomPassword();
+//     const subject = 'Password Reset Confirmation';
+//     const message = `Dear ${User.name || User.username},
+    
+//     Username: ${User.name || User.username}
+    
+//     New Delete security code: ${newPassword}
+// `;
+
+//     const mailInfo = {
+//       from: process.env.EMAIL_USER,
+//       to: email,
+//       subject: subject,
+//       text: message,
+//     }
+})
 
 app.listen(port, () => {
     console.log(`Server running on port: ${port}...`);
 });
-
