@@ -111,12 +111,13 @@
       <span>Logout</span>
       <i class="fas fa-chevron-right arrow"></i>
   </div>
-
-  <div class="menu-item danger" id="deleteBtn">
+  <a href="/Delete/<%=userId%>">
+  <div class="menu-item danger" id="deleteBtn" >
       <i class="fas fa-trash-alt"></i>
       <span>Delete</span>
       <i class="fas fa-chevron-right arrow"></i>
   </div>
+</a>
 </div>
 
 <!-- TRUSTED CONTACT Page -->
@@ -163,11 +164,6 @@
   <div class="menu-header">Personal Information</div>
 
   <form id="personalInfoForm" method="post" action="/update-personal-info/<%= userId %>">
-    <div class="form-group">
-      <label for="name">Full Name</label>
-      <input type="text" id="name" name="name" value="<%= user.Name %>" required>
-    </div>
-
 
     <div class="form-group">
       <label for="username">Username</label>
@@ -214,6 +210,7 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="/script/popup.js"></script>
   <script src="/script/logout.js"></script>
+
   <script>
      if ("geolocation" in navigator) {
   navigator.geolocation.getCurrentPosition((pos) => {
