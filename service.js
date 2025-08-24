@@ -223,8 +223,6 @@ app.post("/forgotPassword", async (req, res) => {
     // Update the password in database after email sent successfully
     await axios.patch(`${url}/users/${id}.json`, { password: newPassword });
 
-    console.log("Password reset email sent and password updated.");
-
     return res.send("<script>alert('Email Sent'); window.location.href='/forgotPassword';</script>");
   } catch (err) {
     console.error("Error during forgot password process:", err);
@@ -290,50 +288,101 @@ app.post("/update-personal-info/:IDuser",async(req,res)=>{
   }
 })
 
-app.get("/delete/:IDuser",(req,res)=>{
-  res.render("delete.ejs");
-})
+app.get("/Delete/:IDuser",(req,res)=>{
+  res.render("Delete.ejs",{
+    userId : req.params.IDuser
+  });
+});
 
-app.delete("/delete/:IDuser",async(req,res)=>{
-  console.log(req.body);
+app.post("/Delete/:IDuser", async (req, res) => {
+  const id = req.params.IDuser;
+
+  try {
+    // find user
+    const response = await axios.get(`${url}/users.json`);
+    const users = response.data;
+    let User;
+
+    for (const userId in users) {
+      if (userId === id) {
+        User = users[userId];
+        break;
+      }
+    }
+
+    if (!User) {
+      return res.status(404).send("User not found");
+    }
+
+    // generate 6-digit OTP
+    const key = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // store in DB
+    await axios.patch(`${url}/users/${id}.json`, { Delete: key });
+
+    // transporter
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    // mail content
+    const subject = "Account Deletion Security Code";
+    const message = `Dear ${User.name || User.username},
+
+Your security code for account deletion is: ${key}
+
+If you did not request account deletion, please ignore this email.`;
+
+    const mailInfo = {
+      from: process.env.EMAIL_USER,
+      to: User.email,
+      subject: subject,
+      text: message,
+    };
+
+    // send email
+    await transporter.sendMail(mailInfo);
 
 
-//   const transporter = nodemailer.createTransport({
-//     service: "gmail",
-//     auth: {
-//       user: process.env.EMAIL_USER,
-//       pass: process.env.EMAIL_PASS,
-//     },
-//   });
+    // ✅ render confirmation page AFTER sending mail
+    res.render("DelConfirmation.ejs", { userId: id });
 
-//   function generateRandomPassword(length = 12) {
-//     const chars =
-//       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_-+=<>?";
-//     let password = "";
-//     for (let i = 0; i < length; i++) {
-//       const randomIndex = Math.floor(Math.random() * chars.length);
-//       password += chars[randomIndex];
-//     }
-//     return password;
-//   }
+  } catch (err) {
+    console.error("Error during user fetch:", err);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
+app.post("/Delete/:IDuser/verify", async (req, res) => {
+  const id = req.params.IDuser;
+  const enteredOTP = [
+    req.body.otp1,
+    req.body.otp2,
+    req.body.otp3,
+    req.body.otp4,
+    req.body.otp5,
+    req.body.otp6
+  ].join(""); // e.g. "123456"
 
-//   const newPassword = generateRandomPassword();
-//     const subject = 'Password Reset Confirmation';
-//     const message = `Dear ${User.name || User.username},
-    
-//     Username: ${User.name || User.username}
-    
-//     New Delete security code: ${newPassword}
-// `;
+  // fetch user from DB
+  const response = await axios.get(`${url}/users/${id}.json`);
+  const User = response.data;
 
-//     const mailInfo = {
-//       from: process.env.EMAIL_USER,
-//       to: email,
-//       subject: subject,
-//       text: message,
-//     }
-})
+  if (!User) return res.status(404).send("User not found");
+
+  if (User.Delete === enteredOTP) {
+    // OTP correct → delete user
+    await axios.delete(`${url}/users/${id}.json`);
+    res.send("<script> alert('Account deleted successfully!'); window.location.href='/'; </script>");
+  } else {
+    res.status(400).send("<script>alert('❌ Invalid OTP. Please try again.');</script>");
+  }
+});
+
 
 app.listen(port, () => {
     console.log(`Server running on port: ${port}...`);
