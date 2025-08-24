@@ -210,6 +210,56 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="/script/popup.js"></script>
   <script src="/script/logout.js"></script>
+
+<script type="module">
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyB5xMzpAbzgvL6uNAv5uZluPqLR5iuLdSY",
+      authDomain: "her-6d883.firebaseapp.com",
+      databaseURL: "https://her-6d883-default-rtdb.firebaseio.com",
+      projectId: "her-6d883",
+      storageBucket: "her-6d883.appspot.com",
+      messagingSenderId: "660185862853",
+      appId: "1:660185862853:web:9852b01191f0931dd016ac"
+    };
+
+    // Import Firebase SDK modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js";
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Get userId from EJS template
+    const userId = "<%= userId %>";
+
+    // Auto-run on page load
+    window.addEventListener("load", () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+
+          // Save location in Firebase
+          update(ref(db, "users/" + userId + "/location"), {
+            latitude: lat,
+            longitude: lon,
+            timestamp: new Date().toISOString()
+          }).then(() => {
+            console.log("✅ Location saved for user:", userId);
+          }).catch((err) => {
+            console.error("❌ Error saving location:", err);
+          });
+
+        }, (err) => {
+          console.error("❌ Geolocation error:", err);
+        });
+      } else {
+        console.error("Geolocation not supported in this browser.");
+      }
+    });
+  </script>
     
 
 </body>
